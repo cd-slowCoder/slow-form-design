@@ -1,8 +1,15 @@
 <template>
-	<div class="flex items-center space-x-4">
+	<div class="flex items-center space-x-4 cursor-pointer">
+		<component :is="renderDialog({ type: 'warning' })" />
 		<ElCard shadow="hover" class="w-full">
 			<template #header>
-				<h2 class="text-left">标题</h2>
+				<div class="flex justify-between">
+					<h2 class="text-left hover:text-blue-700">{{ props.name }}</h2>
+					<div>
+						<el-button type="primary">复制</el-button>
+						<el-button type="danger" @click="openDialog">删除</el-button>
+					</div>
+				</div>
 			</template>
 			<div class="min-h-28">
 				<VueDraggable
@@ -15,9 +22,14 @@
 					@end="onEnd"
 					@remove="handleRemove"
 				>
-					<div v-for="element in formElements" :key="element.id" class="p-4 bg-white rounded shadow cursor-pointer hover:border-red-500">
-						<FormInput v-if="element.type === 'input'" v-bind="element" />
-						<FormCheckbox v-else-if="element.type === 'checkbox'" v-bind="element" />
+					<div
+						v-for="element in formElements"
+						:key="element.id"
+						class="p-4 bg-white rounded shadow cursor-pointer hover:border-2 hover:border-blue-500 transition border-opacity-0 hover:border-opacity-100"
+					>
+						<FormInput v-if="element.type === 'input'" v-model="element.value" v-bind="element" />
+						<FormCheckbox v-else-if="element.type === 'checkbox'" v-model="element.value" v-bind="element" />
+						<FormRadio v-else-if="element.type === 'radio'" v-model="element.value" v-bind="element" />
 						<span v-else> {{ element.label }}</span>
 					</div>
 				</VueDraggable>
@@ -27,26 +39,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElCard } from 'element-plus'
 import { VueDraggable } from 'vue-draggable-plus'
-import { IElement } from '../states/Element'
+import { ITemplateSingleItem } from '../types/record'
 import FormInput from '../elements/FormInput.vue'
 import FormCheckbox from '../elements/FormCheckbox.vue'
-import { generateRandomId } from '../utils/index'
+import FormRadio from '../elements/FormRadio.vue'
+import { useDialog } from '../../hooks/useDialog'
 
-const formElements = ref<IElement[]>([])
+const confirmCancel = () => {
+	console.log('Dialog confirmed')
+	// 在这里添加你要执行的逻辑
+}
+
+const { openDialog, renderDialog } = useDialog({ onOk: confirmCancel })
+
+const formElements = ref<ITemplateSingleItem[]>([])
+
+const props = defineProps<{ data: ITemplateSingleItem[]; name: string }>()
+
+onMounted(() => {
+	formElements.value = props.data
+})
 
 const removeEle = (element: Element) => {
 	console.log('选中元素', element)
 	// 在这里可以添加更多逻辑来处理选中元素
 }
 const handleChange = (event: any) => {
-	console.log(
-		'元素变动',
-		formElements.value,
-		formElements.value.find(item => item.id === '')
-	)
 	const { added } = event
 	if (added) {
 		const element = formElements.value[added.newIndex]
@@ -88,3 +109,4 @@ const handleAdd = (event: any) => {
 <style scoped>
 /* 可以根据需要添加更多的自定义样式 */
 </style>
+../types/Element ../../hooks/useDialog

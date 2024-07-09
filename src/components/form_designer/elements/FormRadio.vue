@@ -1,26 +1,23 @@
 <template>
 	<div class="flex items-center space-x-4">
 		<label class="text-sm font-medium min-w-[100px]">{{ props.label }}</label>
-		<ElInput v-model="modelValue" placeholder="Enter value" @input="onInput" />
+		<el-radio-group v-model="checkValue">
+			<el-radio v-for="item in props.options" :key="item.code" :label="item.val" :value="item.code" />
+		</el-radio-group>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ElInput } from 'element-plus'
-import { defineProps, defineEmits, ref, onMounted } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
 import { ITemplateSingleItem } from '../types/record'
 
-const modelValue = ref('')
+const checkValue = ref()
 
 const props = defineProps<ITemplateSingleItem>()
 
 const emits = defineEmits<{
 	(e: 'update:modelValue', value: string): void
 }>()
-
-onMounted(() => {
-	modelValue.value = `${props.value || ''}`
-})
 
 const onInput = (value: string) => {
 	emits('update:modelValue', value)

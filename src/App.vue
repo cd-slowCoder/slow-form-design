@@ -1,18 +1,20 @@
 <template>
 	<div id="app">
-		<FormDesigner />
+		<FormDesigner ref="formRef" :data="demo" />
 	</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import FormDesigner from './components/form_designer/FormDesigner.vue'
+import { demo } from '@/components/demo'
+import { ref, onMounted } from 'vue'
 
-export default defineComponent({
-	name: 'App',
-	components: {
-		FormDesigner
-	}
+const formRef = ref<typeof FormDesigner | null>(null)
+
+onMounted(() => {
+	setTimeout(() => {
+		console.log('formRef.value?.storeData', formRef.value?.storeData)
+	}, 3000)
 })
 </script>
 

@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { IElement } from '../states/Element'
+import { IElement } from '../types/Element'
 import { useDraggable } from 'vue-draggable-plus'
 import { generateRandomId } from '../utils/index'
 
@@ -83,3 +83,4 @@ useDraggable(containerEl, containerElements, {
 	gap: 1rem;
 }
 </style>
+../types/Element

@@ -4,33 +4,48 @@
 		<ElCard shadow="hover" class="w-full">
 			<template #header>
 				<div class="flex justify-between">
-					<h2 class="text-left hover:text-blue-700">{{ props.name }}</h2>
+					<div class="text-left hover:text-blue-700 flex space-x-4 items-center">
+						<span v-show="!editContainer || !showEdit">{{ props.name || '请编辑标题' }}</span>
+						<div v-if="formCard">
+							<el-input v-show="editContainer && showEdit" v-model="formCard.name" placeholder="请输入" @blur="() => (editContainer = false)" />
+						</div>
+						<el-button type="primary" text @click.stop="handleEdit">编辑</el-button>
+					</div>
 					<div>
-						<el-button type="primary">复制</el-button>
-						<el-button type="danger" @click="openDialog">删除</el-button>
+						<el-button type="primary" @click="handleCopyContainer">复制</el-button>
+						<el-button type="danger" @click="() => handleDelDialog(false)">删除</el-button>
 					</div>
 				</div>
 			</template>
 			<div class="min-h-28">
-				<VueDraggable
-					v-model="formElements"
-					class="grid grid-cols-1 gap-4"
-					:move="moveEle"
-					group="elements"
-					@add="e => handleAdd(e)"
-					@change="handleChange"
-					@end="onEnd"
-					@remove="handleRemove"
-				>
+				<VueDraggable v-model="formElements" class="flex flex-wrap justify-between" group="elements" @add="e => handleAdd(e)" @end="onEnd">
 					<div
-						v-for="element in formElements"
+						v-for="(element, eIndex) in formElements"
 						:key="element.id"
-						class="p-4 bg-white rounded shadow cursor-pointer hover:border-2 hover:border-blue-500 transition border-opacity-0 hover:border-opacity-100"
+						:class="
+							store.slectedItemId === element.id
+								? `pr-10 transition relative mb-4 ${element.col == '1/2' ? 'w-[48%]' : 'w-full'}`
+								: `transition mb-4 ${element.col == '1/2' ? 'w-[48%]' : 'w-full'} `
+						"
+						:templateId="props.templateId"
+						@click.stop="handleSelect(element.id, props.templateId)"
 					>
-						<FormInput v-if="element.type === 'input'" v-model="element.value" v-bind="element" />
-						<FormCheckbox v-else-if="element.type === 'checkbox'" v-model="element.value" v-bind="element" />
-						<FormRadio v-else-if="element.type === 'radio'" v-model="element.value" v-bind="element" />
-						<span v-else> {{ element.label }}</span>
+						<div
+							:class="
+								store.slectedItemId === element.id
+									? 'p-4 bg-gray-100 rounded shadow cursor-pointer border-2 border-blue-500 transition border-opacity-100'
+									: 'p-4 bg-gray-100 rounded shadow cursor-pointer hover:border-2 hover:border-blue-500 transition border-opacity-0 hover:border-opacity-100'
+							"
+						>
+							<FormInput v-if="element.type === 'input'" v-model="element.value" v-bind="element" />
+							<FormCheckbox v-else-if="element.type === 'checkbox'" v-model="element.value" v-bind="element" />
+							<FormRadio v-else-if="element.type === 'radio'" v-model="element.value" v-bind="element" />
+							<span v-else> {{ element.label }}</span>
+						</div>
+						<div v-show="store.slectedItemId === element.id" class="absolute right-0 top-1/2 -translate-y-1/2">
+							<img src="../../../assets/copy.png" alt="" class="w-6 h-6 cursor-pointer mb-4" @click.stop="() => handleCopy(element, eIndex)" />
+							<img src="../../../assets/remove.png" alt="" class="w-6 h-6 cursor-pointer" @click.stop="() => handleDelDialog(true)" />
+						</div>
 					</div>
 				</VueDraggable>
 			</div>
@@ -39,74 +54,113 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, ComputedRef, computed, nextTick } from 'vue'
 import { ElCard } from 'element-plus'
 import { VueDraggable } from 'vue-draggable-plus'
-import { ITemplateSingleItem } from '../types/record'
+import { ITemplateSingleItem, IRecord } from '../types/record'
 import FormInput from '../elements/FormInput.vue'
 import FormCheckbox from '../elements/FormCheckbox.vue'
 import FormRadio from '../elements/FormRadio.vue'
 import { useDialog } from '../../hooks/useDialog'
+import { useDataStore } from '../stores/dataSource'
+import { defaultTabData, defaultItemData } from '../stores/config/detaultData'
+import { generateRandomId } from '../utils'
 
-const confirmCancel = () => {
-	console.log('Dialog confirmed')
-	// 在这里添加你要执行的逻辑
-}
+const store = useDataStore()
 
-const { openDialog, renderDialog } = useDialog({ onOk: confirmCancel })
+const delItem = ref<boolean>(true) // 是删除元素还是容器
+const editContainer = ref<boolean>(false) // 是否编辑容器
 
-const formElements = ref<ITemplateSingleItem[]>([])
-
-const props = defineProps<{ data: ITemplateSingleItem[]; name: string }>()
-
-onMounted(() => {
-	formElements.value = props.data
+const showEdit = computed(() => {
+	return store.slectedContainerId === props.templateId
 })
 
-const removeEle = (element: Element) => {
-	console.log('选中元素', element)
-	// 在这里可以添加更多逻辑来处理选中元素
-}
-const handleChange = (event: any) => {
-	const { added } = event
-	if (added) {
-		const element = formElements.value[added.newIndex]
-		console.log('插入的元素', element)
-		// 在这里修改插入的元素数据
-		element.label = '新插入的元素'
+const formCard: ComputedRef<IRecord | undefined> = computed(() => store.getSelectedContainer)
+
+const confirmCancel = () => {
+	if (delItem.value) {
+		store.removeItem(store.slectedItemId)
+	} else {
+		store.removeContainer(props.templateId)
 	}
 }
+const { openDialog, renderDialog } = useDialog({ onOk: confirmCancel })
 
-const handleRemove = (event: any) => {
-	const oldElement = event.item._underlying_vm_ // 获取移出的元素
-	if (!oldElement || !oldElement.allowed) {
-		// 根据某个属性判断是否允许移出
-		// formElements.value.splice(event.oldIndex, 0, oldElement) // 如果不允许移出，将元素添加回去
+const props = defineProps<{ data: ITemplateSingleItem[]; name: string; templateId: number; index: number }>()
+
+const emit = defineEmits(['copy'])
+
+const formElements = computed(() => {
+	return props.data
+})
+
+const handleEdit = () => {
+	store.setId({ slectedContainerId: props.templateId })
+	editContainer.value = true
+}
+
+const handleDelDialog = (bol: boolean) => {
+	delItem.value = bol
+	if (!bol) {
+		store.setId({ slectedContainerId: props.templateId })
 	}
-	// formElements.value.splice(event.oldIndex, 0, oldElement)
+	openDialog()
 }
 
-const moveEle = (element: Element) => {
-	console.log('选中元素', element)
-	// 在这里可以添加更多逻辑来处理选中元素
-}
+const handleCopy = (item: IRecord | ITemplateSingleItem, index: number) => {
+	const parentId = props.templateId
+	const newIndex = index + 1
+	const newItem = {
+		...item,
+		parentId: parentId,
+		id: generateRandomId()
+	}
 
-const onEnd = (element: any) => {
-	console.log('选中元素end', element)
-	// 在这里可以添加更多逻辑来处理选中元素
+	store.insertExternalItem({ parentId, newIndex, newItem })
+}
+const handleCopyContainer = () => {
+	emit('copy', props.data, props.index, props.name)
 }
 
 const handleAdd = (event: any) => {
-	const newElement = event.item._underlying_vm_ // 获取新添加的元素
-	if (!newElement || !newElement.allowed) {
-		// 根据某个属性判断是否允许添加
+	const newIndex = event.newIndex
+	const parentId = props.templateId // 根据你的数据结构设定
+
+	const itemType = event.item.getAttribute('type')
+
+	const eleTemplateId = event.item.getAttribute('templateId')
+
+	if (eleTemplateId && eleTemplateId != props.templateId) {
+		return
 	}
-	console.log('event', event)
-	// formElements.value.splice(event.newIndex, 1) // 移除不符合条件的元素
+
+	const newItem = {
+		...defaultItemData,
+		parentId: parentId,
+		id: generateRandomId(),
+		type: itemType
+	}
+
+	store.insertExternalItem({ parentId, newIndex, newItem })
+}
+
+const onEnd = (event: any) => {
+	const oldIndex = event.oldIndex
+	const newIndex = event.newIndex
+	const parentId = props.templateId // 根据你的数据结构设定
+
+	store.moveItemWithinSameLevel({ parentId, oldIndex, newIndex })
+}
+
+const handleSelect = (id: number, templateId: number) => {
+	if (id == store.slectedItemId) {
+		store.setId({ slectedItemId: 0, slectedContainerId: 0 })
+	} else {
+		store.setId({ slectedItemId: id, slectedContainerId: templateId })
+	}
 }
 </script>
 
 <style scoped>
 /* 可以根据需要添加更多的自定义样式 */
 </style>
-../types/Element ../../hooks/useDialog

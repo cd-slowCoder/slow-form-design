@@ -1,7 +1,7 @@
 <template>
 	<div class="flex items-center space-x-4">
 		<label class="text-sm font-medium min-w-[100px]">{{ props.label }}</label>
-		<ElInput v-model="modelValue" placeholder="Enter value" @input="onInput" />
+		<ElInput :value="modelValue" readonly placeholder="Enter value" @input="onInput" />
 	</div>
 </template>
 

@@ -1,15 +1,14 @@
 <template>
-	<div>
+	<div class="h-full overflow-y-auto pb-16">
 		<h2 class="text-[30px] font-bold mb-4">表单展示区域</h2>
-
 		<el-tabs v-model="editableTabsValue" type="card" class="demo-tabs" closable @tab-remove="removeTab" @tab-change="tabChange">
-			<el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.name" :name="item.name">
-				<VueDraggable v-model="formElements" class="grid grid-cols-1 gap-4" :move="moveEle" group="container">
+			<el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.name" :name="item.id">
+				<VueDraggable v-model="formElements" class="grid grid-cols-1 gap-4" group="container" @add="handleAdd" @end="onEnd">
 					<div v-if="formElements.length === 0" class="text-center text-gray-500">
 						<p>将元素拖拽到此处</p>
 					</div>
-					<div v-for="ele in formElements" :key="ele.id">
-						<Card :key="ele.id" :data="ele.templateSingleItemList || []" :name="ele.name" />
+					<div v-for="(ele, index) in formElements" :key="ele.id">
+						<Card :key="ele.id" :index="index" :data="ele.templateSingleItemList || []" :name="ele.name" :template-id="ele.id" @copy="handleCopy" />
 					</div>
 				</VueDraggable>
 			</el-tab-pane>
@@ -18,56 +17,78 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
-import { IRecord } from '../types/record'
-import { defineProps } from 'vue'
 import Card from '../container/Card.vue'
-import ControllBox from './ControllBox.vue'
+import { useDataStore } from '../stores/dataSource'
+import { defaultTabData, defaultContainerData } from '../stores/config/detaultData'
+import { generateRandomId } from '../utils'
+import { ITemplateSingleItem, IRecord } from '../types/record'
 
-const formElements = ref<IRecord[]>([])
+const store = useDataStore()
 
-const props = defineProps<{ data: IRecord[] }>()
+const formElements = computed(() => {
+	return store.getSelectedTab?.children || []
+})
+
+const editableTabs = computed(() => {
+	return store.data || []
+})
 
 const editableTabsValue = ref()
-const editableTabs = ref<IRecord[]>()
+// const editableTabs = ref<IRecord[]>()
 
 onMounted(() => {
-	const currData = props.data
-	editableTabs.value = currData
-	editableTabsValue.value = currData.length > 0 ? currData[0].name : ''
-	const currForm = currData[0].children || []
-	formElements.value = currForm
-	console.log('formElements.value ', currForm, formElements.value)
+	const tableId = editableTabs.value.length ? editableTabs.value[0].id : 0
+	store.selectedTabId = tableId
+	editableTabsValue.value = tableId
 })
 
 const removeTab = (name: string | number) => {}
 
 const tabChange = (name: string | number) => {
-	const currData = props.data
-	const currForm = currData.find(item => item.name === name)?.children || []
-	formElements.value = currForm
+	store.selectedTabId = parseFloat(`${name}`)
+	editableTabsValue.value = name
 }
 
-const removeEle = (element: Element) => {
-	console.log('选中元素', element)
-	// 在这里可以添加更多逻辑来处理选中元素
+const handleAdd = (event: any) => {
+	const newIndex = event.newIndex
+	const parentId = store.selectedTabId // 根据你的数据结构设定
+
+	const itemType = event.item.getAttribute('type')
+
+	console.log(event.item, itemType, newIndex, parentId)
+
+	const newItem = {
+		...defaultContainerData,
+		parentId: parentId,
+		id: generateRandomId()
+	}
+
+	store.insertExternalItem({ parentId, newIndex, newItem })
 }
 
-const moveEle = (element: Element) => {
-	console.log('选中元素', element)
-	// 在这里可以添加更多逻辑来处理选中元素
+const onEnd = (event: any) => {
+	const oldIndex = event.oldIndex
+	const newIndex = event.newIndex
+	const parentId = store.selectedTabId // 根据你的数据结构设定
+
+	store.moveItemWithinSameLevel({ parentId, oldIndex, newIndex })
 }
 
-const selectElement = (element: Element) => {
-	console.log('选中元素', element)
-	// 在这里可以添加更多逻辑来处理选中元素
+const handleCopy = (item: ITemplateSingleItem[], index: number, name: string) => {
+	const parentId = store.selectedTabId
+	const newIndex = index + 1
+	const newItem = {
+		...defaultContainerData,
+		templateSingleItemList: item,
+		parentId: parentId,
+		name: name,
+		id: generateRandomId()
+	}
+
+	store.insertExternalItem({ parentId, newIndex, newItem })
 }
 </script>
 
-<style scoped>
-.draggable {
-	display: grid;
-	gap: 1rem;
-}
-</style>
+<style scoped></style>

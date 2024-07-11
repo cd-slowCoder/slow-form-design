@@ -1,8 +1,8 @@
 <template>
 	<div class="flex items-center space-x-4">
 		<label class="text-sm font-medium min-w-[100px]">{{ props.label }}</label>
-		<el-radio-group v-model="checkValue">
-			<el-radio v-for="item in props.options" :key="item.code" :label="item.val" :value="item.code" />
+		<el-radio-group :value="checkValue">
+			<el-radio v-for="item in props.options" :key="item.code" disabled :label="item.val" :value="item.code" />
 		</el-radio-group>
 	</div>
 </template>
@@ -14,14 +14,6 @@ import { ITemplateSingleItem } from '../types/record'
 const checkValue = ref()
 
 const props = defineProps<ITemplateSingleItem>()
-
-const emits = defineEmits<{
-	(e: 'update:modelValue', value: string): void
-}>()
-
-const onInput = (value: string) => {
-	emits('update:modelValue', value)
-}
 </script>
 
 <style scoped>

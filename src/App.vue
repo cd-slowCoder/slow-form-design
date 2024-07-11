@@ -1,5 +1,8 @@
 <template>
 	<div id="app">
+		<div>
+			<button @click="getData">获取数据</button>
+		</div>
 		<FormDesigner ref="formRef" :data="demo" />
 	</div>
 </template>
@@ -11,20 +14,21 @@ import { ref, onMounted } from 'vue'
 
 const formRef = ref<typeof FormDesigner | null>(null)
 
-onMounted(() => {
-	setTimeout(() => {
-		console.log('formRef.value?.storeData', formRef.value?.storeData)
-	}, 3000)
-})
+const getData = () => {
+	console.log('formRef.value?.storeData', formRef.value?.storeData)
+}
 </script>
 
 <style>
+html,
+body,
 #app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: left;
-	color: #2c3e50;
-	margin-top: 20px;
+	height: 100%;
+	width: 100%;
+}
+* {
+	padding: 0;
+	box-sizing: border-box;
+	margin: 0;
 }
 </style>

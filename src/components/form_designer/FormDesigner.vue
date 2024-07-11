@@ -1,7 +1,7 @@
 <template>
-	<div class="flex">
+	<div class="flex h-full overflow-hidden">
 		<FormElements class="w-1/4 p-4 border-r" />
-		<FormDisplay :data="currData" class="w-2/4 p-4 border-r" />
+		<FormDisplay class="w-2/4 p-4 border-r" />
 		<ElementProperties class="w-1/4 p-4" />
 	</div>
 </template>
@@ -16,7 +16,6 @@ import { useDataStore } from './stores/dataSource'
 const props = defineProps<{ data: IRecord[] }>()
 const store = useDataStore()
 store.setData(props.data)
-const currData = ref(store.getData)
 
 // 使用 expose 将方法和数据暴露给父组件
 defineExpose({

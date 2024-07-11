@@ -2,7 +2,7 @@
 	<div class="flex items-center space-x-4">
 		<label class="text-sm font-medium min-w-[100px]">{{ props.label }}</label>
 		<el-checkbox-group v-model="checkList">
-			<el-checkbox v-for="item in props.options" :key="item.code" :label="item.val" :value="item.code" />
+			<el-checkbox v-for="item in props.options" :key="item.code" readonly :label="item.val" :value="item.code" />
 		</el-checkbox-group>
 	</div>
 </template>

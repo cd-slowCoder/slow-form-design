@@ -3,7 +3,7 @@
 		<div>
 			<h2 class="text-xl font-bold mb-4">容器元素</h2>
 			<div ref="containerEl" class="grid grid-cols-2 gap-4">
-				<div v-for="element in containerElements" :key="element.id" class="p-4 bg-gray-200 rounded shadow">
+				<div v-for="element in containerElements" :key="element.id" class="p-4 bg-gray-200 rounded shadow" :type="element.type">
 					{{ element.label }}
 				</div>
 			</div>
@@ -11,7 +11,7 @@
 		<div class="mt-4">
 			<h2 class="text-xl font-bold mb-4">表单元素</h2>
 			<div ref="formEl" class="grid grid-cols-2 gap-4">
-				<div v-for="element in elements" :key="element.id" class="p-4 bg-gray-200 rounded shadow">
+				<div v-for="element in elements" :key="element.id" class="p-4 bg-gray-200 rounded shadow" :type="element.type">
 					{{ element.label }}
 				</div>
 			</div>
@@ -52,7 +52,7 @@ useDraggable(formEl, elements, {
 		return {
 			label: element.label,
 			type: element.type,
-			id: `${generateRandomId(element.id)}`,
+			id: `${generateRandomId()}`,
 			value: ''
 		}
 	}
@@ -70,7 +70,7 @@ useDraggable(containerEl, containerElements, {
 		return {
 			label: element.label,
 			type: element.type,
-			id: `${generateRandomId(element.id)}`,
+			id: `${generateRandomId()}`,
 			value: ''
 		}
 	}

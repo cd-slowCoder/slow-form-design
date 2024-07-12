@@ -62,27 +62,26 @@ export function useDialog({ onOk, onCancel }: { onOk: () => void; onCancel?: () 
 			},
 			{
 				default: () => h('span', {}, message),
-				footer: () =>
-					h('div', { class: 'dialog-footer flex justify-end space-x-4 p-4 border-t border-gray-200' }, [
-						h(
-							'button',
-							{ onClick: closeDialog, class: 'px-8 py-2 rounded-lg border border-gray-300 hover:border-blue-500 transition-colors' },
-							'取消'
-						),
-						h(
-							'button',
-							{
-								onClick: () => {
-									closeDialog()
-									onOk()
-								},
-								class: 'px-8 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-700 transition-colors'
-							},
-							'确认'
-						)
-					])
+				footer: () => renderFooter()
 			}
 		)
+	}
+
+	const renderFooter = () => {
+		return h('div', { class: 'dialog-footer flex justify-end space-x-4 p-4 border-t border-gray-200' }, [
+			h('button', { onClick: closeDialog, class: 'px-8 py-2 rounded-lg border border-gray-300 hover:border-blue-500 transition-colors' }, '取消'),
+			h(
+				'button',
+				{
+					onClick: () => {
+						closeDialog()
+						onOk()
+					},
+					class: 'px-8 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-700 transition-colors'
+				},
+				'确认'
+			)
+		])
 	}
 
 	return {
@@ -90,6 +89,7 @@ export function useDialog({ onOk, onCancel }: { onOk: () => void; onCancel?: () 
 		openDialog,
 		closeDialog,
 		handleClose,
-		renderDialog
+		renderDialog,
+		renderFooter
 	}
 }

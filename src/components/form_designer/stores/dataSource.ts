@@ -44,13 +44,6 @@ export const useDataStore = defineStore('dataStore', {
 			this.data = newData
 		},
 
-		addTabData(newData?: Partial<IRecord>) {
-			this.data.push({
-				...defaultTabData,
-				...newData
-			})
-		},
-
 		removeTabData(id: number) {
 			this.data = this.data.filter(tab => tab.id !== id)
 		},
@@ -68,36 +61,6 @@ export const useDataStore = defineStore('dataStore', {
 			console.log('container-tab', id, container, this.selectedTabId)
 			if (container && container.templateSingleItemList) {
 				container.templateSingleItemList = container.templateSingleItemList.filter(item => item.id !== id)
-			}
-		},
-
-		updateSelectedTab(newData: Partial<IRecord>) {
-			const tab = this.data.find(tab => tab.id === this.selectedTabId)
-			if (tab) {
-				Object.assign(tab, newData)
-			}
-		},
-
-		updateSelectedContainer(newData: Partial<IRecord>) {
-			const tab = this.data.find(tab => tab.id === this.selectedTabId)
-			if (tab) {
-				const container = tab.children.find(container => container.id === this.slectedContainerId)
-				if (container) {
-					Object.assign(container, newData)
-				}
-			}
-		},
-
-		updateSelectedItem(newData: Partial<ITemplateSingleItem>) {
-			const tab = this.data.find(tab => tab.id === this.selectedTabId)
-			if (tab) {
-				const container = tab.children.find(container => container.id === this.slectedContainerId)
-				if (container && container.templateSingleItemList) {
-					const item = container.templateSingleItemList.find(item => item.id === this.slectedItemId)
-					if (item) {
-						Object.assign(item, newData)
-					}
-				}
 			}
 		},
 

@@ -1,7 +1,21 @@
 <template>
 	<div class="h-full overflow-y-auto pb-16">
-		<h2 class="text-[30px] font-bold mb-4">表单展示区域</h2>
-		<el-tabs v-model="editableTabsValue" type="card" class="demo-tabs" closable @tab-remove="removeTab" @tab-change="tabChange">
+		<component :is="renderDialog(renderDialogParams)">
+			<template #default>
+				<div v-for="(item, index) in settingTabs" :key="index" class="flex items-center mb-4">
+					<label class="text-sm font-medium min-w-[70px]">Tab标题：</label>
+					<ElInput v-model="item.name" placeholder="Enter value" />
+					<img src="../../../assets/remove.png" alt="" class="ml-4 w-6 h-6 cursor-pointer" @click="handleSetting('del', index)" />
+					<img src="../../../assets/copy.png" alt="" class="ml-4 w-6 h-6 cursor-pointer" @click="handleSetting('copy', index)" />
+				</div>
+				<img src="../../../assets/add.png" alt="" class="w-8 h-8 cursor-pointer" @click="handleSetting('add')" />
+			</template>
+			<template #footer>
+				<component :is="renderFooter()"></component>
+			</template>
+		</component>
+		<h2 class="text-[30px] font-bold mb-4">表单展示区域 <el-button type="primary" text class="ml-4" @click="openSetting">Tab 配置</el-button></h2>
+		<el-tabs v-model="editableTabsValue" type="card" @tab-change="tabChange">
 			<el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.name" :name="item.id">
 				<VueDraggable v-model="formElements" class="grid grid-cols-1 gap-4" group="container" @add="handleAdd" @end="onEnd">
 					<div v-if="formElements.length === 0" class="text-center text-gray-500">
@@ -24,6 +38,7 @@ import { useDataStore } from '../stores/dataSource'
 import { defaultTabData, defaultContainerData } from '../stores/config/detaultData'
 import { generateRandomId } from '../utils'
 import { ITemplateSingleItem, IRecord } from '../types/record'
+import { IDialogProps, useDialog } from '../../hooks/useDialog'
 
 const store = useDataStore()
 
@@ -32,11 +47,12 @@ const formElements = computed(() => {
 })
 
 const editableTabs = computed(() => {
-	return store.data || []
+	return store.getData || []
 })
 
+const settingTabs = ref<IRecord[]>([])
+
 const editableTabsValue = ref()
-// const editableTabs = ref<IRecord[]>()
 
 onMounted(() => {
 	const tableId = editableTabs.value.length ? editableTabs.value[0].id : 0
@@ -44,7 +60,57 @@ onMounted(() => {
 	editableTabsValue.value = tableId
 })
 
-const removeTab = (name: string | number) => {}
+const confirmDialog = () => {
+	store.setData(
+		settingTabs.value.map(item => {
+			return {
+				...item
+			}
+		})
+	)
+}
+const { openDialog, renderDialog, renderFooter } = useDialog({ onOk: confirmDialog })
+const renderDialogParams = ref<IDialogProps>({
+	type: 'warning',
+	title: 'Tab 配置'
+})
+
+const openSetting = () => {
+	settingTabs.value = editableTabs.value.map(item => {
+		return {
+			...item
+		}
+	})
+	openDialog()
+}
+
+const handleSetting = (type: 'add' | 'copy' | 'del', index?: number) => {
+	switch (type) {
+		case 'add':
+			settingTabs.value.push({
+				...defaultTabData,
+				id: generateRandomId(),
+				name: '标题示例'
+			})
+			break
+		case 'copy':
+			if (index !== undefined) {
+				settingTabs.value.push({
+					...settingTabs.value[index],
+					id: generateRandomId(),
+					name: '标题示例'
+				})
+			}
+			break
+		case 'del':
+			if (index !== undefined) {
+				settingTabs.value.splice(index, 1)
+			}
+			break
+		default:
+			break
+	}
+}
 
 const tabChange = (name: string | number) => {
 	store.selectedTabId = parseFloat(`${name}`)

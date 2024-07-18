@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高德地图多边形保存为PNG</title>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=843490105d4f818c52f17812bac8b02f">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        #mapContainer {
+            width: 100%;
+            height: 500px;
+        }
+
+        #controls {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mapContainer"></div>
+    <div id="controls">
+        <button id="startDrawBtn">开始绘制</button>
+        <button id="endDrawBtn">结束绘制</button>
+        <button id="saveBtn">保存为PNG图片</button>
+    </div>
+
+    <script>
+        let map;
+        let polygon;
+        let drawing = false;
+        let path = [];
+
+        function initMap() {
+            map = new AMap.Map('mapContainer', {
+                zoom: 10,
+                center: [116.397428, 39.90923],
+                WebGLParams: {
+                    preserveDrawingBuffer: true
+                }
+            });
+
+            map.on('click', (e) => {
+                if (drawing) {
+                    path.push([e.lnglat.getLng(), e.lnglat.getLat()]);
+                    drawPolygon();
+                }
+            });
+        }
+
+        function drawPolygon() {
+            if (polygon) {
+                map.remove(polygon);
+            }
+            polygon = new AMap.Polygon({
+                path: path,
+                strokeColor: '#FF33FF',
+                strokeWeight: 6,
+                strokeOpacity: 0.2,
+                fillOpacity: 0.4,
+                fillColor: '#1791fc',
+                zIndex: 50
+            });
+            map.add(polygon);
+        }
+
+        function startDrawing() {
+            drawing = true;
+            path = [];
+            if (polygon) {
+                map.remove(polygon);
+                polygon = null;
+            }
+        }
+
+        function endDrawing() {
+            drawing = false;
+            if (path.length > 2) {
+                path.push(path[0]); // 首尾相连
+                drawPolygon();
+            } else {
+                alert('请绘制至少三个点来形成多边形');
+            }
+        }
+
+        function savePolygonAsPNG() {
+            if (!polygon) {
+                alert('请先绘制一个多边形');
+                return;
+            }
+
+            html2canvas(document.querySelector("#mapContainer"), {
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: null,
+                border: null,
+                scale: window.devicePixelRatio // Ensure higher quality screenshot
+            }).then(canvas => {
+                const imgData = canvas.toDataURL("image/png");
+
+                // Create a download link and trigger download
+                const a = document.createElement('a');
+                a.href = imgData;
+                a.download = 'polygon.png';
+                a.click();
+            }).catch(error => {
+                console.error('保存PNG图片失败!', error);
+            });
+        }
+
+        document.getElementById('startDrawBtn').addEventListener('click', startDrawing);
+        document.getElementById('endDrawBtn').addEventListener('click', endDrawing);
+        document.getElementById('saveBtn').addEventListener('click', savePolygonAsPNG);
+
+        window.onload = initMap;
+    </script>
+</body>
+
+</html>

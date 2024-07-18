@@ -2,17 +2,20 @@
 	<div>
 		<h2 class="text-xl font-bold mb-4">元素属性配置</h2>
 		<div v-if="currForeItem">
+			<el-form-item label="标题">
+				<el-input v-model="currForeItem.label" />
+			</el-form-item>
+			<el-form-item label="字段">
+				<el-select v-model="currForeItem.field" placeholder="please select your zone" class="w-full">
+					<el-option label="Zone one" value="shanghai" />
+					<el-option label="Zone two" value="beijing" />
+				</el-select>
+			</el-form-item>
+			<el-form-item v-if="currForeItem" label="是否必填">
+				<el-switch v-model="currForeItem.required" />
+			</el-form-item>
 			<!-- 在这里添加更多属性配置项 -->
 			<component :is="componentMap[currForeItem.type as  TemplateSingleItemType]" />
-			<!-- 公共配置 -->
-			<div>
-				<el-form-item label="宽度">
-					<el-select v-model="currForeItem.col" class="w-full">
-						<el-option label="1" value="1" />
-						<el-option label="1/2" value="1/2" />
-					</el-select>
-				</el-form-item>
-			</div>
 		</div>
 		<div v-else>
 			<p>请选择一个表单元素</p>
@@ -33,7 +36,7 @@ const currForeItem = computed(() => store.getSelectedItem)
 const componentMap: Record<TemplateSingleItemType, any> = {
 	[TemplateSingleItemType.Input]: ProperInput,
 	[TemplateSingleItemType.Radio]: ProperRadio,
-	[TemplateSingleItemType.Checkbox]: ProperInput,
+	[TemplateSingleItemType.Checkbox]: ProperRadio,
 	[TemplateSingleItemType.Photos]: ProperInput,
 	[TemplateSingleItemType.Signs]: ProperInput
 }

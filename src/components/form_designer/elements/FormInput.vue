@@ -1,6 +1,6 @@
 <template>
 	<div class="flex items-center space-x-4">
-		<label class="text-sm font-medium min-w-[100px]">{{ props.label }}</label>
+		<FormLabel :label="props.label" :required="props.required" />
 		<ElInput :value="modelValue" readonly placeholder="Enter value" @input="onInput" />
 	</div>
 </template>
@@ -9,6 +9,7 @@
 import { ElInput } from 'element-plus'
 import { defineProps, defineEmits, ref, onMounted } from 'vue'
 import { ITemplateSingleItem } from '../types/record'
+import FormLabel from './FormLabel.vue'
 
 const modelValue = ref('')
 

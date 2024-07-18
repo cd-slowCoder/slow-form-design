@@ -27,14 +27,14 @@ import { generateRandomId } from '../utils/index'
 
 const containerElements = ref<IElement[]>([
 	{ id: '1', label: '卡片', type: 'container', value: '' },
-	{ id: '2', label: '签名', type: 'signs', value: '' },
-	{ id: '3', label: '照片', type: 'photos', value: '' }
+	{ id: '2', label: '签名', type: 'signs', value: '' }
 ])
 
 const elements = ref<IElement[]>([
 	{ id: '', label: '输入框', type: 'input', value: '' },
 	{ id: '', label: '复选框', type: 'checkbox', value: '' },
-	{ id: '', label: '单选框', type: 'radio', value: '' }
+	{ id: '', label: '单选框', type: 'radio', value: '' },
+	{ id: '', label: '照片', type: 'photos', value: '' }
 ])
 
 const formEl = ref(null)

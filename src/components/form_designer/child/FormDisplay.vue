@@ -22,7 +22,24 @@
 						<p>将元素拖拽到此处</p>
 					</div>
 					<div v-for="(ele, index) in formElements" :key="ele.id">
-						<Card :key="ele.id" :index="index" :data="ele.templateSingleItemList || []" :name="ele.name" :template-id="ele.id" @copy="handleCopy" />
+						<Signs
+							v-if="ele.isSign || false"
+							:key="ele.id"
+							:index="index"
+							:data="ele.templateSingleItemList || []"
+							:name="ele.name"
+							:template-id="ele.id"
+							@copy="handleCopy"
+						/>
+						<Card
+							v-else
+							:key="ele.id + ''"
+							:index="index"
+							:data="ele.templateSingleItemList || []"
+							:name="ele.name"
+							:template-id="ele.id"
+							@copy="handleCopy"
+						/>
 					</div>
 				</VueDraggable>
 			</el-tab-pane>
@@ -34,10 +51,12 @@
 import { ref, onMounted, computed } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import Card from '../container/Card.vue'
+import Signs from '../container/Signs.vue'
+
 import { useDataStore } from '../stores/dataSource'
-import { defaultTabData, defaultContainerData } from '../stores/config/detaultData'
+import { defaultTabData, defaultContainerData, defaultItemData } from '../stores/config/detaultData'
 import { generateRandomId } from '../utils'
-import { ITemplateSingleItem, IRecord } from '../types/record'
+import { ITemplateSingleItem, IRecord, TemplateSingleItemType } from '../types/record'
 import { IDialogProps, useDialog } from '../../hooks/useDialog'
 
 const store = useDataStore()
@@ -125,10 +144,13 @@ const handleAdd = (event: any) => {
 
 	console.log(event.item, itemType, newIndex, parentId)
 
+	const tabId = generateRandomId()
+
 	const newItem = {
 		...defaultContainerData,
 		parentId: parentId,
-		id: generateRandomId()
+		isSign: itemType == TemplateSingleItemType.Signs ? true : false,
+		id: tabId
 	}
 
 	store.insertExternalItem({ parentId, newIndex, newItem })

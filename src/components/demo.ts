@@ -65,7 +65,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571640
+						tableId: 1675243571640,
+						required: false
 					},
 					{
 						id: 1645544490184,
@@ -98,7 +99,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571640
+						tableId: 1675243571640,
+						required: false
 					},
 					{
 						id: 1645547507552,
@@ -110,6 +112,7 @@ export const demo: IRecord[] = [
 						multiSample: 'N',
 						value: '1',
 						dicParentCode: null,
+						required: false,
 						options: [
 							{
 								val: '景点',
@@ -185,7 +188,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571640
+						tableId: 1675243571640,
+						required: false
 					},
 					{
 						id: 1646187244992,
@@ -218,7 +222,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571640
+						tableId: 1675243571640,
+						required: false
 					},
 					{
 						id: 1646187483456,
@@ -251,7 +256,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571640
+						tableId: 1675243571640,
+						required: false
 					},
 					{
 						id: 1646187541496,
@@ -284,7 +290,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571640
+						tableId: 1675243571640,
+						required: false
 					}
 				],
 				templateMultiItemList: [[]]
@@ -355,7 +362,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571736
+						tableId: 1675243571736,
+						required: false
 					},
 					{
 						id: 1646188039744,
@@ -388,7 +396,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571736
+						tableId: 1675243571736,
+						required: false
 					},
 					{
 						id: 1646188136632,
@@ -421,7 +430,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571736
+						tableId: 1675243571736,
+						required: false
 					},
 					{
 						id: 1646188233864,
@@ -454,7 +464,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571736
+						tableId: 1675243571736,
+						required: false
 					},
 					{
 						id: 1646188301216,
@@ -487,7 +498,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571736
+						tableId: 1675243571736,
+						required: false
 					}
 				],
 				templateMultiItemList: [[]]
@@ -537,6 +549,7 @@ export const demo: IRecord[] = [
 						multiSample: 'N',
 						value: null,
 						dicParentCode: null,
+						required: false,
 						options: [
 							{
 								val: '退样',
@@ -604,7 +617,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646188756576,
@@ -637,7 +651,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646188818160,
@@ -670,7 +685,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646188909544,
@@ -703,7 +719,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646189191000,
@@ -736,7 +753,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646189270632,
@@ -769,7 +787,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646189355384,
@@ -802,7 +821,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646189436816,
@@ -835,7 +855,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646189539208,
@@ -868,7 +889,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					},
 					{
 						id: 1646189636184,
@@ -901,7 +923,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571824
+						tableId: 1675243571824,
+						required: false
 					}
 				],
 				templateMultiItemList: [[]]
@@ -972,7 +995,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243571920
+						tableId: 1675243571920,
+						required: false
 					}
 				],
 				templateMultiItemList: [[]]
@@ -1025,7 +1049,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243572008
+						tableId: 1675243572008,
+						required: false
 					}
 				],
 				templateMultiItemList: [[]]
@@ -1078,7 +1103,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243572088
+						tableId: 1675243572088,
+						required: false
 					},
 					{
 						id: 1646196029120,
@@ -1111,7 +1137,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243572088
+						tableId: 1675243572088,
+						required: false
 					},
 					{
 						id: 1646196054200,
@@ -1144,7 +1171,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243572088
+						tableId: 1675243572088,
+						required: false
 					},
 					{
 						id: 1646196086456,
@@ -1177,7 +1205,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243572088
+						tableId: 1675243572088,
+						required: false
 					}
 				],
 				templateMultiItemList: [[]]
@@ -1239,7 +1268,8 @@ export const demo: IRecord[] = [
 						sort: 1,
 						tenantId: null,
 						deleted: 0,
-						tableId: 1675243572168
+						tableId: 1675243572168,
+						required: false
 					}
 				],
 				templateMultiItemList: [[]]

@@ -44,6 +44,7 @@ export interface ITemplateSingleItem {
 	groupCode: GroupCode | string
 	userId: allFieldType
 	enabled: allFieldType
+	required: boolean
 	showed: number
 	labelWidth: allFieldType
 	col: string

@@ -66,5 +66,6 @@ export const defaultItemData: ITemplateSingleItem = {
 	sort: 0,
 	tenantId: null,
 	deleted: 0,
-	tableId: 0
+	tableId: 0,
+	required: false
 }
